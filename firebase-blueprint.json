@@ -1,0 +1,24 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile saving their voter registration status and address",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "address": { "type": "string" },
+        "isRegistered": { "type": "boolean" },
+        "pollingBoothKnown": { "type": "boolean" },
+        "idReady": { "type": "boolean" },
+        "updatedAt": { "type": "number", "description": "Timestamp of last update" }
+      },
+      "required": ["uid", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "User personalized tracking for the election process."
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "name": "V-O-T-E",
+  "description": "An AI-powered Indian election day assistant. Helps voters verify their Electoral Roll entry, locate polling booths, understand EVM/VVPAT operation, and navigate ECI procedures using Firebase Auth, Firestore, Gemini AI, and Google Maps.",
+  "requestFramePermissions": [
+    "geolocation"
+  ],
+  "majorCapabilities": ["firebase_auth", "firebase_firestore", "google_maps"]
+}

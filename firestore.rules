@@ -1,0 +1,35 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Global Default Deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Global Helpers
+    function isSignedIn() { return request.auth != null; }
+    function isOwner(userId) { return isSignedIn() && request.auth.uid == userId; }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+
+    // Validation for UserProfile
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll(['uid', 'updatedAt']) &&
+             data.uid == userId &&
+             data.updatedAt == request.time &&
+             (data.get('address', '') is string) &&
+             (data.get('isRegistered', false) is bool) &&
+             (data.get('pollingBoothKnown', false) is bool) &&
+             (data.get('idReady', false) is bool);
+    }
+
+    match /users/{userId} {
+      allow read: if isOwner(userId) && isValidId(userId);
+      allow create: if isOwner(userId) && isValidId(userId) && isValidUserProfile(incoming(), userId);
+      allow update: if isOwner(userId) && isValidId(userId) && isValidUserProfile(incoming(), userId) &&
+                    incoming().uid == existing().uid;
+    }
+  }
+}
