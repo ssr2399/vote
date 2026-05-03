@@ -19,20 +19,6 @@ V-O-T-E is a 4-panel dashboard that guides voters through every step of election
 
 ---
 
-## Evaluation Parameter Mapping
-
-| Evaluator Parameter | Score | Implementation Details | Key Files |
-|---|---|---|---|
-| **Google Services** | 100% | Firebase Auth (`signInWithPopup`), Firestore (`getDoc`/`setDoc`/`serverTimestamp`), Gemini AI (`gemini-2.0-flash` + system prompt + cache), Maps SDK (`importLibrary("maps")` + `Marker`), Civic Info API (`civicinfo/v2/voterinfo`), Google Calendar (deep link), Analytics (`getAnalytics` + `isSupported`) | `firebaseService.ts`, `geminiService.ts`, `googleService.ts`, `useAuth.ts`, `Timeline.tsx` |
-| **Security** | 97.5% | CSP meta tag (allowlisted Google domains, no `unsafe-eval`), Firestore rules (field-level validation, owner-only, `updatedAt == request.time`), `rel="noopener noreferrer"`, `serverTimestamp()` enforcement, Firebase OAuth (no mock users) | `index.html`, `firestore.rules`, `firebaseService.ts` |
-| **Efficiency** | 100% | `React.memo` (Timeline), `useMemo` (chat messages), prompt cache (`Map<string, string>`), `isMounted` flag (Maps cleanup), `manualChunks` vendor splitting, auth listener cleanup | `Timeline.tsx`, `TutorialAssistant.tsx`, `geminiService.ts`, `NavigationCard.tsx`, `vitest.config.ts` |
-| **Testing** | 95% | 9 test files, 45+ test cases. Components (VoterStatus 7, TutorialAssistant 5, Timeline 4, NavigationCard 6, App 6, ErrorBoundary 3), Services (geminiService 5, aiService 3), Hooks (useAuth 6). All mocked: Firebase, Gemini, Maps | `src/components/*.test.tsx`, `src/services/*.test.ts`, `src/hooks/*.test.ts` |
-| **Accessibility** | 98.75% | Skip-to-content link, `aria-live="polite"` (chat), `role="checkbox"` + `aria-checked` + keyboard (Space/Enter), `role="list/listitem"` (timeline), `role="alert"` (ErrorBoundary), semantic HTML (`<header>`, `<main>`, `<footer>`), `aria-hidden` on decorative, PwD-aware UI (ramp entry, volunteers) | `App.tsx`, `VoterStatus.tsx`, `TutorialAssistant.tsx`, `Timeline.tsx`, `NavigationCard.tsx`, `ErrorBoundary.tsx` |
-| **Problem Statement** | 98% | Indian election domain: EVM/VVPAT guidance, EPIC verification, Electoral Roll lookup, PwD accommodations, booth procedures, constituency display, document checklist (Voter ID, Aadhaar), ECI timeline milestones | All component files, `aiService.ts`, `geminiService.ts` |
-| **Code Quality** | 86.25% | Clean services→hooks→components architecture, ErrorBoundary at root, TypeScript throughout, no `as any` casts, proper type annotations (`Analytics \| null`), `React.memo`/`useMemo` where appropriate | All source files |
-
----
-
 ## Google Services Integration
 
 | Service | Implementation | File |
